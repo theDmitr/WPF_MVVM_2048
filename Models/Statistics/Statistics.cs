@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace WPF_MVVM_2048.Model
+using WPF_MVVM_2048.Models.Json;
+
+namespace WPF_MVVM_2048.Models.Statistics
 {
     public class Statistics
     {

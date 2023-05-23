@@ -1,10 +1,8 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Numerics;
+
 using WPF_MVVM_2048.Commands;
-using WPF_MVVM_2048.Model;
+using WPF_MVVM_2048.Models.Statistics;
 using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.ViewModels

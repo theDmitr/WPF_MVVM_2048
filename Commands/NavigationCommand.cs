@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
+
 using WPF_MVVM_2048.Commands.Base;
-using WPF_MVVM_2048.ViewModels;
 using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.Commands

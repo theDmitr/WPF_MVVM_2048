@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace WPF_MVVM_2048.Model
+namespace WPF_MVVM_2048.Models.Json
 {
     public class JsonFileManager
     {
@@ -48,7 +43,7 @@ namespace WPF_MVVM_2048.Model
             {
                 return JsonSerializer.Deserialize<ObservableCollection<T>>(jsonString, options);
             }
-            catch (System.Text.Json.JsonException)
+            catch (JsonException)
             {
                 if (jsonString != "")
                 {
