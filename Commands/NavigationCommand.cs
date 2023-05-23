@@ -6,7 +6,7 @@ using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.Commands
 {
-    public class NavigationCommand : CommandBase
+    public class NavigationCommand : BaseCommand
     {
         private readonly Action<NavigationInfo> execute;
         private readonly Uri uri;

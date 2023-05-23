@@ -4,7 +4,7 @@ using WPF_MVVM_2048.Commands.Base;
 
 namespace WPF_MVVM_2048.Commands
 {
-    public class RelayCommand : CommandBase
+    public class RelayCommand : BaseCommand
     {
         private readonly Action execute;
 

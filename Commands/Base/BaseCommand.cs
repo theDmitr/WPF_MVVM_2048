@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace WPF_MVVM_2048.Commands.Base
 {
-    public abstract class CommandBase : ICommand
+    public abstract class BaseCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 

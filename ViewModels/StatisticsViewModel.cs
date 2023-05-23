@@ -9,7 +9,7 @@ namespace WPF_MVVM_2048.ViewModels
 {
     public class StatisticsViewModel : ViewModel
     {
-        public static NavigationCommand NavigateToMenuPage { get => new(NavigateToPage, new Uri("View/Pages/MenuPage.xaml", UriKind.RelativeOrAbsolute)); }
+        public static NavigationCommand NavigateToMenuPage { get => new(NavigateToPage, new Uri("Views/Pages/MenuPage.xaml", UriKind.RelativeOrAbsolute)); }
         public static ObservableCollection<Player> StatisticsCollection { get => Statistics.Players; }
     }
 }

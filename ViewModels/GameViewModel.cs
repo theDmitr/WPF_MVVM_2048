@@ -3,6 +3,7 @@ using System.Windows;
 
 using WPF_MVVM_2048.Commands;
 using WPF_MVVM_2048.Model;
+using WPF_MVVM_2048.Models.Statistics;
 using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.ViewModels
@@ -31,7 +32,7 @@ namespace WPF_MVVM_2048.ViewModels
         }
 
         #region Commands
-        public static NavigationCommand NavigateToMenuPage { get => new(NavigateToPage, new Uri("View/Pages/MenuPage.xaml", UriKind.RelativeOrAbsolute)); }
+        public static NavigationCommand NavigateToMenuPage { get => new(NavigateToPage, new Uri("Views/Pages/MenuPage.xaml", UriKind.RelativeOrAbsolute)); }
 
         public RelayCommand ShiftLeftCommand { get; init; }
         public RelayCommand ShiftRightCommand { get; init; }
