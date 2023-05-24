@@ -1,4 +1,4 @@
-﻿namespace WPF_MVVM_2048.Models.Statistics
+﻿namespace WPF_MVVM_2048.Models
 {
     public class Player
     {

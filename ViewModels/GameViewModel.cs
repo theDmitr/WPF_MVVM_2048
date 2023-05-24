@@ -3,7 +3,7 @@ using System.Windows;
 
 using WPF_MVVM_2048.Commands;
 using WPF_MVVM_2048.Data;
-using WPF_MVVM_2048.Model;
+using WPF_MVVM_2048.Models;
 using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.ViewModels

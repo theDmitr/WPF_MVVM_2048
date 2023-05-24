@@ -1,7 +1,7 @@
 ﻿using System;
 using WPF_MVVM_2048.ViewModels.Base;
 
-namespace WPF_MVVM_2048.Model
+namespace WPF_MVVM_2048.Models
 {
     public class GameBoard : ViewModel
     {

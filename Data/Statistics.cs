@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 
-using WPF_MVVM_2048.Models.Statistics;
+using WPF_MVVM_2048.Models;
 
 namespace WPF_MVVM_2048.Data
 {
