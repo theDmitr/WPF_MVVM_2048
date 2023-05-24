@@ -8,18 +8,17 @@ namespace WPF_MVVM_2048.Commands
 {
     public class NavigationCommand : BaseCommand
     {
-        private readonly Action<NavigationInfo> execute;
+        private readonly Action<Page, Uri> execute;
         private readonly Uri uri;
 
-        public NavigationCommand(Action<NavigationInfo> execute, Uri uri)
+        public NavigationCommand(Action<Page, Uri> execute, Uri uri)
         {
             this.execute = execute;
             this.uri = uri;
         }
         public override void Execute(object parameter)
         {
-            NavigationInfo info = new((Page) parameter, uri);
-            execute.Invoke(info);
+            execute.Invoke((Page) parameter, uri);
         }
     }
 }

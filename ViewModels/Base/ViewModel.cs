@@ -23,25 +23,14 @@ namespace WPF_MVVM_2048.ViewModels.Base
             return true;
         }
 
-        protected static void NavigateToPage(NavigationInfo navigationInfo)
+        protected static void NavigateToPage(Page page, Uri uri)
         {
-            NavigationService.GetNavigationService(navigationInfo.CurrentPage).Navigate(navigationInfo.Uri);
+            NavigationService.GetNavigationService(page).Navigate(uri);
         }
 
         protected static void Quit()
         {
             Application.Current.Shutdown();
-        }
-    }
-
-    public class NavigationInfo
-    {
-        public Page CurrentPage { get; }
-        public Uri Uri { get; }
-        public NavigationInfo(Page currentPage, Uri uri)
-        {
-            CurrentPage = currentPage;
-            Uri = uri;
         }
     }
 }

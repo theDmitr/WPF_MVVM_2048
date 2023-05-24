@@ -2,25 +2,24 @@
 using System.Windows;
 
 using WPF_MVVM_2048.Commands;
+using WPF_MVVM_2048.Data;
 using WPF_MVVM_2048.Model;
-using WPF_MVVM_2048.Models.Statistics;
 using WPF_MVVM_2048.ViewModels.Base;
 
 namespace WPF_MVVM_2048.ViewModels
 {
     public class GameViewModel : ViewModel
     {
-        private readonly GameModel gameModel;
+        private readonly GameBoard gameBoard;
+        private readonly Random random;
 
-        private int[,] cells;
-        private string score;
-
-        public int[,] Cells { get => cells; private set => Set(ref cells, value); }
-        public string Score { get => score; private set => Set(ref score, value); }
+        public int[,] Board { get => gameBoard.board; private set => Set(ref gameBoard.board, value); }
+        public int Score { get => gameBoard.score; private set => Set(ref gameBoard.score, value); }
 
         public GameViewModel()
         {
-            gameModel = new GameModel();
+            gameBoard = new GameBoard();
+            random = new Random();
 
             ShiftLeftCommand = new RelayCommand(ShiftLeft);
             ShiftRightCommand = new RelayCommand(ShiftRight);
@@ -28,7 +27,7 @@ namespace WPF_MVVM_2048.ViewModels
             ShiftUpCommand = new RelayCommand(ShiftUp);
             ResetCommand = new RelayCommand(Reset);
 
-            Update();
+            Reset();
         }
 
         #region Commands
@@ -44,14 +43,38 @@ namespace WPF_MVVM_2048.ViewModels
         #region Operations
         private void Reset()
         {
-            gameModel.Reset();
+            Board = new int[gameBoard.boardSize, gameBoard.boardSize];
+            Score = 0;
+            GenerateRandomNumber();
+            GenerateRandomNumber();
             Update();
         }
 
+        private void GenerateRandomNumber()
+        {
+            int row, col;
+
+            do
+            {
+                row = random.Next(gameBoard.boardSize);
+                col = random.Next(gameBoard.boardSize);
+            } while (gameBoard.board[row, col] != 0);
+
+            gameBoard.board[row, col] = random.Next(100) < 90 ? 2 : 4;
+        }
+
+        private void Update()
+        {
+            Board = gameBoard.Board;
+            Score = gameBoard.Score;
+        }
+        #endregion
+
+        #region GameState
         private void CheckGameState()
         {
             Update();
-            if (gameModel.IsGameOver())
+            if (IsGameOver())
             {
                 MessageBoxResult result = MessageBox.Show("Вы проиграли! Желаете занести себя в список?", "Конец", MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (result == MessageBoxResult.Yes)
@@ -61,7 +84,7 @@ namespace WPF_MVVM_2048.ViewModels
 
                 Reset();
             }
-            else if (gameModel.IsGameWin())
+            else if (IsGameWin())
             {
                 MessageBoxResult result = MessageBox.Show("Вы выиграли! Желаете занести себя в список?", "Конец", MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (result == MessageBoxResult.Yes)
@@ -73,12 +96,66 @@ namespace WPF_MVVM_2048.ViewModels
             }
         }
 
-        private void Update()
+        public bool IsGameWin()
         {
-            Cells = gameModel.Board;
-            Score = gameModel.Score.ToString();
+            for (int row = 0; row < gameBoard.boardSize; row++)
+            {
+                for (int column = 0; column < gameBoard.boardSize; column++)
+                {
+                    if (gameBoard.board[row, column] == gameBoard.WinValue)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
+        public bool IsGameOver()
+        {
+            for (int row = 0; row < gameBoard.boardSize; row++)
+            {
+                for (int column = 0; column < gameBoard.boardSize; column++)
+                {
+                    if (gameBoard.board[row, column] == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            for (int row = 0; row < gameBoard.boardSize; row++)
+            {
+                for (int column = 0; column < gameBoard.boardSize; column++)
+                {
+                    int value = gameBoard.board[row, column];
+
+                    if (row > 0 && gameBoard.board[row - 1, column] == value)
+                    {
+                        return false;
+                    }
+
+                    if (row < gameBoard.boardSize - 1 && gameBoard.board[row + 1, column] == value)
+                    {
+                        return false;
+                    }
+
+                    if (column > 0 && gameBoard.board[row, column - 1] == value)
+                    {
+                        return false;
+                    }
+
+                    if (column < gameBoard.boardSize - 1 && gameBoard.board[row, column + 1] == value)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        #endregion
+
+        #region Statistics
         private void AddToStatistics()
         {
             string name;
@@ -92,34 +169,157 @@ namespace WPF_MVVM_2048.ViewModels
                 }
             } while (string.IsNullOrEmpty(name));
 
-            Statistics.Add(name, Score);
+            Statistics.Add(name, Score.ToString());
         }
         #endregion
 
         #region Shifts
-        private void ShiftLeft()
+        public void ShiftLeft()
         {
-            if (gameModel.ShiftLeft())
+            bool shifted = false;
+            for (int i = 0; i < gameBoard.board.GetLength(0); i++)
+            {
+                int index = 0;
+                for (int j = 0; j < gameBoard.board.GetLength(1); j++)
+                {
+                    if (gameBoard.board[i, j] != 0)
+                    {
+                        if (index > 0 && gameBoard.board[i, index - 1] == gameBoard.board[i, j])
+                        {
+                            gameBoard.board[i, index - 1] *= 2;
+                            gameBoard.board[i, j] = 0;
+                            shifted = true;
+                            gameBoard.score += gameBoard.board[i, index - 1];
+                        }
+                        else
+                        {
+                            if (j != index)
+                            {
+                                gameBoard.board[i, index] = gameBoard.board[i, j];
+                                gameBoard.board[i, j] = 0;
+                                shifted = true;
+                            }
+                            index++;
+                        }
+                    }
+                }
+            }
+            if (shifted)
+            {
+                GenerateRandomNumber();
                 CheckGameState();
+            }
         }
 
-        private void ShiftRight()
+        public void ShiftRight()
         {
-            if (gameModel.ShiftRight())
+            bool shifted = false;
+            for (int i = 0; i < gameBoard.board.GetLength(0); i++)
+            {
+                int index = gameBoard.board.GetLength(1) - 1;
+                for (int j = gameBoard.board.GetLength(1) - 1; j >= 0; j--)
+                {
+                    if (gameBoard.board[i, j] != 0)
+                    {
+                        if (index < gameBoard.board.GetLength(1) - 1 && gameBoard.board[i, index + 1] == gameBoard.board[i, j])
+                        {
+                            gameBoard.board[i, index + 1] *= 2;
+                            gameBoard.board[i, j] = 0;
+                            shifted = true;
+                            gameBoard.score += gameBoard.board[i, index + 1];
+                        }
+                        else
+                        {
+                            if (j != index)
+                            {
+                                gameBoard.board[i, index] = gameBoard.board[i, j];
+                                gameBoard.board[i, j] = 0;
+                                shifted = true;
+                            }
+                            index--;
+                        }
+                    }
+                }
+            }
+            if (shifted)
+            {
+                GenerateRandomNumber();
                 CheckGameState();
+            }
         }
 
-        private void ShiftDown()
+        public void ShiftDown()
         {
-
-            if (gameModel.ShiftDown())
+            bool shifted = false;
+            for (int j = 0; j < gameBoard.board.GetLength(1); j++)
+            {
+                int index = gameBoard.board.GetLength(0) - 1;
+                for (int i = gameBoard.board.GetLength(0) - 1; i >= 0; i--)
+                {
+                    if (gameBoard.board[i, j] != 0)
+                    {
+                        if (index < gameBoard.board.GetLength(0) - 1 && gameBoard.board[index + 1, j] == gameBoard.board[i, j])
+                        {
+                            gameBoard.board[index + 1, j] *= 2;
+                            gameBoard.board[i, j] = 0;
+                            shifted = true;
+                            gameBoard.score += gameBoard.board[index + 1, j];
+                        }
+                        else
+                        {
+                            if (i != index)
+                            {
+                                gameBoard.board[index, j] = gameBoard.board[i, j];
+                                gameBoard.board[i, j] = 0;
+                                shifted = true;
+                            }
+                            index--;
+                        }
+                    }
+                }
+            }
+            if (shifted)
+            {
+                GenerateRandomNumber();
                 CheckGameState();
+            }
         }
 
-        private void ShiftUp()
+        public void ShiftUp()
         {
-            if (gameModel.ShiftUp())
+            bool shifted = false;
+            for (int j = 0; j < gameBoard.board.GetLength(1); j++)
+            {
+                int index = 0;
+                for (int i = 0; i < gameBoard.board.GetLength(0); i++)
+                {
+                    if (gameBoard.board[i, j] != 0)
+                    {
+                        if (index > 0 && gameBoard.board[index - 1, j] == gameBoard.board[i, j])
+                        {
+                            gameBoard.board[index - 1, j] *= 2;
+                            gameBoard.board[i, j] = 0;
+                            shifted = true;
+                            gameBoard.score += gameBoard.board[index - 1, j];
+                        }
+                        else
+                        {
+                            if (i != index)
+                            {
+                                gameBoard.board[index, j] = gameBoard.board[i, j];
+                                gameBoard.board[i, j] = 0;
+                                shifted = true;
+                            }
+                            index++;
+                        }
+                    }
+                }
+            }
+            if (shifted)
+            {
+                GenerateRandomNumber();
                 CheckGameState();
+            }
         }
         #endregion
     }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 
-namespace WPF_MVVM_2048.Models.Json
+namespace WPF_MVVM_2048.Data
 {
     public class JsonFileManager
     {

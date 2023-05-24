@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 
 using WPF_MVVM_2048.Commands;
+using WPF_MVVM_2048.Data;
 using WPF_MVVM_2048.Models.Statistics;
 using WPF_MVVM_2048.ViewModels.Base;
 

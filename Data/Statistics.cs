@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 
-using WPF_MVVM_2048.Models.Json;
+using WPF_MVVM_2048.Models.Statistics;
 
-namespace WPF_MVVM_2048.Models.Statistics
+namespace WPF_MVVM_2048.Data
 {
     public class Statistics
     {
